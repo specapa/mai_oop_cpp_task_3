@@ -8,10 +8,11 @@ class Hexagon : public Figure {
 private:
     double cx, cy;
     double a;
+    double angle;
 
 public:
     Hexagon();
-    Hexagon(double cx, double cy, double a);
+    Hexagon(double cx, double cy, double a, double angle = 0);
 
     std::vector<std::pair<double, double>> GetVertices() const;
 

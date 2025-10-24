@@ -7,10 +7,11 @@ class Rhomb : public Figure {
 private:
     double cx, cy;
     double d1, d2;
+    double angle;
 
 public:
     Rhomb();
-    Rhomb(double cx, double cy, double d1, double d2);
+    Rhomb(double cx, double cy, double d1, double d2, double angle = 0);
 
     std::vector<std::pair<double, double>> GetVertices() const;
 

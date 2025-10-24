@@ -8,10 +8,11 @@ class Pentagon : public Figure {
 private:
     double cx, cy;
     double a;
+    double angle;
 
 public:
     Pentagon();
-    Pentagon(double cx, double cy, double a);
+    Pentagon(double cx, double cy, double a, double angle = 0);
 
     std::vector<std::pair<double, double>> GetVertices() const;
 
