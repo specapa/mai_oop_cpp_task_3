@@ -5,6 +5,7 @@
 
 class Rhomb : public Figure {
 private:
+    std::array<Point<double>, 4> vert;
     double cx, cy;
     double d1, d2;
     double angle;

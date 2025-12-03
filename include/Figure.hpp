@@ -6,6 +6,7 @@
 #include <cmath>
 #include <memory>
 #include <iomanip>
+#include "Point.hpp"
 
 class Figure {
     public:

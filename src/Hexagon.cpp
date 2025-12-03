@@ -2,10 +2,20 @@
 #include <cmath>
 #include <iomanip>
 
-Hexagon::Hexagon() : cx(0), cy(0), a(1), angle(0) {}
+Hexagon::Hexagon() : cx(0), cy(0), a(1), angle(0) {
+    auto vertices = GetVertices();
+    for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+        vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+    }
+}
 
 Hexagon::Hexagon(double cx, double cy, double a, double angle) 
-    : cx(cx), cy(cy), a(a), angle(angle) {}
+    : cx(cx), cy(cy), a(a), angle(angle) {
+    auto vertices = GetVertices();
+    for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+        vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+    }
+}
 
 std::vector<std::pair<double, double>> Hexagon::GetVertices() const {
     std::vector<std::pair<double, double>> vertices;
@@ -21,11 +31,21 @@ std::vector<std::pair<double, double>> Hexagon::GetVertices() const {
 }
 
 std::pair<double, double> Hexagon::Center() const {
-    return {cx, cy};
+    double sum_x = 0.0, sum_y = 0.0;
+    for (size_t i = 0; i < vert.size(); ++i) {
+        sum_x += vert[i].x;
+        sum_y += vert[i].y;
+    }
+    const double n = static_cast<double>(vert.size());
+    return {sum_x / n, sum_y / n};
 }
 
 void Hexagon::Print(std::ostream& os) const {
-    auto vertices = GetVertices();
+    // Use stored vertices when printing
+    std::vector<std::pair<double,double>> vertices;
+    for (size_t i = 0; i < vert.size(); ++i) {
+        vertices.push_back({vert[i].x, vert[i].y});
+    }
     double angleDeg = angle * 180.0 / M_PI;
     os << "Hexagon (center: " << std::fixed << std::setprecision(2) 
        << cx << ", " << cy << "; side: " << a 
@@ -49,6 +69,11 @@ void Hexagon::Read(std::istream& is) {
     double angleDeg;
     is >> angleDeg;
     angle = angleDeg * M_PI / 180.0;
+    // store vertices
+    auto vertices = GetVertices();
+    for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+        vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+    }
 }
 
 Hexagon::operator double() const {
@@ -65,6 +90,10 @@ Figure& Hexagon::operator=(const Figure& other) {
         cy = hex->cy;
         a = hex->a;
         angle = hex->angle;
+        auto vertices = GetVertices();
+        for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+            vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+        }
     }
     return *this;
 }
@@ -79,6 +108,10 @@ Figure& Hexagon::operator=(Figure&& other) noexcept {
         cy = hex->cy;
         a = hex->a;
         angle = hex->angle;
+        auto vertices = GetVertices();
+        for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+            vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+        }
     }
     return *this;
 }

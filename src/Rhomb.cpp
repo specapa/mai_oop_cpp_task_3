@@ -2,10 +2,20 @@
 #include <cmath>
 #include <iomanip>
 
-Rhomb::Rhomb() : cx(0), cy(0), d1(1), d2(1), angle(0) {}
+Rhomb::Rhomb() : cx(0), cy(0), d1(1), d2(1), angle(0) {
+    auto vertices = GetVertices();
+    for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+        vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+    }
+}
 
 Rhomb::Rhomb(double cx, double cy, double d1, double d2, double angle) 
-    : cx(cx), cy(cy), d1(d1), d2(d2), angle(angle) {}
+    : cx(cx), cy(cy), d1(d1), d2(d2), angle(angle) {
+    auto vertices = GetVertices();
+    for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+        vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+    }
+}
 
 std::vector<std::pair<double, double>> Rhomb::GetVertices() const {
     std::vector<std::pair<double, double>> vertices;
@@ -30,19 +40,29 @@ std::vector<std::pair<double, double>> Rhomb::GetVertices() const {
 }
 
 std::pair<double, double> Rhomb::Center() const {
-    return {cx, cy};
+    double sum_x = 0.0, sum_y = 0.0;
+    for (size_t i = 0; i < vert.size(); ++i) {
+        sum_x += vert[i].x;
+        sum_y += vert[i].y;
+    }
+    const double n = static_cast<double>(vert.size());
+    return {sum_x / n, sum_y / n};
 }
 
 void Rhomb::Print(std::ostream& os) const {
-    auto vertices = GetVertices();
+    // prefer stored vertices
+    std::vector<std::pair<double,double>> stored;
+    for (size_t i = 0; i < vert.size(); ++i) {
+        stored.push_back({vert[i].x, vert[i].y});
+    }
     double angleDeg = angle * 180.0 / M_PI;
     os << "Rhomb (center: " << std::fixed << std::setprecision(2) 
        << cx << ", " << cy << "; diagonals: " << d1 << ", " << d2 
        << "; rotation: " << angleDeg << "°)\n";
     os << "Vertices:\n";
-    for (size_t i = 0; i < vertices.size(); ++i) {
-        os << "  V" << i << ": (" << vertices[i].first 
-           << ", " << vertices[i].second << ")\n";
+    for (size_t i = 0; i < stored.size(); ++i) {
+        os << "  V" << i << ": (" << stored[i].first 
+           << ", " << stored[i].second << ")\n";
     }
 }
 
@@ -58,6 +78,11 @@ void Rhomb::Read(std::istream& is) {
     double angleDeg;
     is >> angleDeg;
     angle = angleDeg * M_PI / 180.0;
+    // store vertices
+    auto vertices = GetVertices();
+    for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+        vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+    }
 }
 
 Rhomb::operator double() const {
@@ -75,6 +100,10 @@ Figure& Rhomb::operator=(const Figure& other) {
         d1 = rhomb->d1;
         d2 = rhomb->d2;
         angle = rhomb->angle;
+        auto vertices = GetVertices();
+        for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+            vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+        }
     }
     return *this;
 }
@@ -90,6 +119,10 @@ Figure& Rhomb::operator=(Figure&& other) noexcept {
         d1 = rhomb->d1;
         d2 = rhomb->d2;
         angle = rhomb->angle;
+        auto vertices = GetVertices();
+        for (size_t i = 0; i < vert.size() && i < vertices.size(); ++i) {
+            vert[i] = Point<double>{vertices[i].first, vertices[i].second};
+        }
     }
     return *this;
 }

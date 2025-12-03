@@ -6,6 +6,7 @@
 
 class Hexagon : public Figure {
 private:
+    std::array<Point<double>, 6> vert;
     double cx, cy;
     double a;
     double angle;
